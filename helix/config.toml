@@ -1,0 +1,36 @@
+theme = "dark_plus"
+
+[editor]
+line-number = "relative"
+# Show "tabs" for buffer at the top.
+bufferline = "always"
+# Some terminal required it for some theme to work.
+true-color = true
+# Save when switching betweens buffer.
+auto-save = true
+
+[editor.lsp]
+display-inlay-hints = true
+
+# Make it easier to know in which mode we are.
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+# Useful when working with markdown.
+[editor.soft-wrap]
+enable = true
+wrap-indicator = ""
+
+[editor.file-picker]
+hidden = false
+
+[keys.normal]
+# Better vertical movement (from the Primeagen)
+C-u = ["half_page_up", "align_view_center"]
+C-d = ["half_page_down", "align_view_center"]
+
+C-s = ":w"
+
+
