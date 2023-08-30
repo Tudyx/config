@@ -5,6 +5,9 @@
 
 SELECTION=$(xsel --primary --output)
 wmctrl -s 1
+# Sometimes the switch between the workspace is too slow and the tab launch
+# inside the old workspace. Hence the delay.
+sleep 0.2
 
 if [[ $SELECTION == https://* ]] || [[ $SELECTION == http://* ]] ;
 then
