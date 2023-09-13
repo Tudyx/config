@@ -18,13 +18,20 @@ insert = "bar"
 normal = "block"
 select = "underline"
 
+# Make long lines fit the screen size.
 # Useful when working with markdown.
 [editor.soft-wrap]
 enable = true
 wrap-indicator = ""
 
 [editor.file-picker]
+# Show hidden files inside the picker.
 hidden = false
+
+# Show explicitly the indentation.
+[editor.indent-guides]
+render = true
+character = "▏"
 
 [keys.normal]
 # Better vertical movement (from the Primeagen)
@@ -33,4 +40,3 @@ C-d = ["half_page_down", "align_view_center"]
 
 C-s = ":w"
 C-space = "save_selection"
-
