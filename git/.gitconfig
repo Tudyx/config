@@ -1,0 +1,8 @@
+[user]
+	name = Tudyx
+	email = 56633664+Tudyx@users.noreply.github.com
+[push]
+	autoSetupRemote = true
+[alias]
+	c = commit
+	s = status
