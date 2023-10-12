@@ -6,3 +6,5 @@
 [alias]
 	c = commit
 	s = status
+[init]
+	defaultBranch = main
