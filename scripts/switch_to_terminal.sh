@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-wmctrl -xFa gnome-terminal-server.Gnome-terminal
+wmctrl -xFa org.wezfurlong.wezterm.org.wezfurlong.wezterm
