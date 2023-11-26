@@ -55,6 +55,10 @@ character = "▏"
 
 [keys.insert]
 C-k = "normal_mode"
+up = "no_op"
+down = "no_op"
+left = "no_op"
+right = "no_op"
 
 [keys.select]
 C-k = "normal_mode"
