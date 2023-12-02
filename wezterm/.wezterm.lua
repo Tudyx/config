@@ -47,7 +47,7 @@ config.keys = {
     action = wezterm.action.SendKey { key = 'a', mods = 'CTRL' },
   },
   {
-    key = 'l',
+    key = 'o',
     mods = 'LEADER',
     action = wezterm.action.ActivateLastTab,
   },
