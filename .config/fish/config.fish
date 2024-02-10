@@ -22,8 +22,8 @@ set fish_greeting
 set fish_prompt_pwd_dir_length 0
 
 setenv EDITOR hx
-# TODO: add hx to the path also for the root user.
-# setenv SUDO_EDITOR hx
+# hx is not in the path for the root user.
+setenv SUDO_EDITOR $(which hx)
 
 # colored man output
 # from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
