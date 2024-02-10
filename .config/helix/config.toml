@@ -35,6 +35,10 @@ select = "underline"
 enable = true
 wrap-indicator = ""
 
+[editor.file-picker]
+# Show hidden files in the file-picker.
+hidden = false
+
 # Show explicitly the indentation.
 [editor.indent-guides]
 render = true

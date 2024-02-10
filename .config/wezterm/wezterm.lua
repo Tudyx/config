@@ -10,10 +10,6 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
--- config.inactive_pane_hsb = {
---   saturation = 0.24,
---   brightness = 0.5
--- }
 -- By default wezterm use JetBrain Mono font (https://www.jetbrains.com/lp/mono/) which has ligature by default.
 -- Uncomment this if you want to disable this.
 -- config.harfbuzz_features = { 'calt=0', 'clig=0', 'liga=0' }
@@ -23,11 +19,16 @@ end
 config.color_scheme = 'Google (dark) (terminal.sexy)'
 -- Default shell
 config.default_prog= {'/usr/bin/fish'}
+-- No padding around window
 config.window_padding = {
   left = 2,
   right = 0,
   top = 0,
   bottom = 0,
+}
+config.inactive_pane_hsb = {
+  saturation = 0.9,
+  brightness = 0.6, -- Default 0.7
 }
 config.enable_scroll_bar = true
 -- config.tab_bar_at_bottom = true
