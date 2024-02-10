@@ -59,10 +59,10 @@ right = "no_op"
 C-k = "normal_mode"
 
 [keys.normal]
+C-k = "normal_mode"
 # Better vertical movement (from the Primeagen)
 C-u = ["half_page_up", "align_view_center"]
 C-d = ["half_page_down", "align_view_center"]
-C-k = "normal_mode"
 
 C-s = ":w"
 C-space = "save_selection"
