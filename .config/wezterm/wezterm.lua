@@ -31,7 +31,6 @@ config.inactive_pane_hsb = {
   brightness = 0.6, -- Default 0.7
 }
 config.enable_scroll_bar = true
--- config.tab_bar_at_bottom = true
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.keys = {
   -- Replace fullscreen key bindings as there is a conflic with helix.
@@ -44,7 +43,14 @@ config.keys = {
     key = 'F11',
     action = wezterm.action.ToggleFullScreen
   },
+  -- Open scrollback buffer with helix
+  {
+    key = 'e',
+    mods = 'LEADER',
+    action = wezterm.action.EmitEvent 'trigger-helix-with-scrollback',
+  },
   -- Reproduce tmux shorcut
+  --
   -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
   -- This resolve the conflicts with emacs "go to begin of the line" used in most of the shell
   {
@@ -102,6 +108,39 @@ config.keys = {
     -- { key = "o", mods = "LEADER",       action="TogglePaneZoomState" },
     -- { key = "z", mods = "LEADER",       action="TogglePaneZoomState" },
  }
+local io = require 'io'
+local os = require 'os'
+local act = wezterm.action
+
+wezterm.on('trigger-helix-with-scrollback', function(window, pane)
+  -- Retrieve the text from the pane
+  local text = pane:get_lines_as_text(pane:get_dimensions().scrollback_rows)
+
+  -- Create a temporary file to pass to helix
+  local name = os.tmpname()
+  local f = io.open(name, 'w+')
+  f:write(text)
+  f:flush()
+  f:close()
+
+  -- Open a new window running helix and tell it to open the file
+  window:perform_action(
+    act.SpawnCommandInNewTab{
+      args = { 'hx', '+1000000', name },
+      -- args = { 'hx', string.format("+%s", config.scrollback_lines), name },
+    },
+    pane
+  )
+
+  -- Wait "enough" time for helix to read the file before we remove it.
+  -- The window creation and process spawn are asynchronous wrt. running
+  -- this script and are not awaitable, so we just pick a number.
+  --
+  -- Note: We don't strictly need to remove this file, but it is nice
+  -- to avoid cluttering up the temporary directory.
+  wezterm.sleep_ms(1000)
+  os.remove(name)
+end)
 
 -- and finally, return the configuration to wezterm
 return config
