@@ -1,5 +1,5 @@
 [language-server.rust-analyzer]
-config = { cargo = { features = "all" }, check = { command = "clippy" } }
+config = { cargo = { features = "all" }, check = { command = "clippy" }, diagnostics = { disabled = ["inactive-code"]}}
 
 [[language]]
 name = "toml"
