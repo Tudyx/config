@@ -17,7 +17,7 @@ right = ["workspace-diagnostics", "selections", "register", "position","position
 
 [editor.lsp]
 display-inlay-hints = true
-# display-message = true
+display-messages = true
 
 # Tab in insert mod to move to the end of a pair.
 [editor.smart-tab]
