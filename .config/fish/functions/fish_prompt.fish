@@ -1,3 +1,5 @@
+# Just like informative_vcs but with a newline.
+
 function fish_prompt --description 'Write out the prompt'
     set -l last_pipestatus $pipestatus
     set -lx __fish_last_status $status # Export for __fish_print_pipestatus.
@@ -44,15 +46,6 @@ function fish_prompt --description 'Write out the prompt'
         set suffix '$'
     end
 
-    # Color the prompt differently when we're root
-    set -l suffix2 '❯'
-    if functions -q fish_is_root_user; and fish_is_root_user
-        if set -q fish_color_cwd_root
-            set cwd_color (set_color $fish_color_cwd_root)
-        end
-        set suffix2 '#'
-    end
-
     # PWD
     set_color $color_cwd
     echo -n (prompt_pwd)
@@ -66,5 +59,5 @@ function fish_prompt --description 'Write out the prompt'
     echo $prompt_status
     set_color normal
 
-    echo -n -s $suffix2 ' ' $normal
+    echo "$suffix "
 end
