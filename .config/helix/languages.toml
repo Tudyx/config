@@ -1,5 +1,10 @@
-[language-server.rust-analyzer]
-config = { cargo = { features = "all" }, check = { command = "clippy" }, diagnostics = { disabled = ["inactive-code"]}}
+# https://rust-analyzer.github.io/manual.html#configuration
+[language-server.rust-analyzer.config]
+cargo = { features = "all" , targetDir = true }
+check = { command = "clippy" }
+diagnostics = { disabled = ["inactive-code"] } 
+# Show lifetime elision and compiler implicit reborrows.
+# inlayHints = { lifetimeElisionHints = { enable = true }, expressionAdjustmentHints = { enable = true }}
 
 [[language]]
 name = "toml"
