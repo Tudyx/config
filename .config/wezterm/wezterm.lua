@@ -40,7 +40,7 @@ config.keys = {
     action = wezterm.action.DisableDefaultAssignment,
   },
   {
-    key = 'F11',
+    key = 'F7',
     action = wezterm.action.ToggleFullScreen
   },
   -- Open scrollback buffer with helix

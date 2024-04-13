@@ -7,5 +7,16 @@ diagnostics = { disabled = ["inactive-code"] }
 # inlayHints = { lifetimeElisionHints = { enable = true }, expressionAdjustmentHints = { enable = true }}
 
 [[language]]
+name = "rust"
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'<' = '>'
+'"' = '"'
+'`' = '`'
+
+
+[[language]]
 name = "toml"
 formatter = { command = "taplo", args = ["fmt", "-"]}
