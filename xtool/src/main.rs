@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 use xshell::Shell;
 
 mod gcf;
+mod playground;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -18,6 +19,7 @@ enum Commands {
         /// For instance rustls/pemfile
         respository: String,
     },
+    Playground,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -25,5 +27,6 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     match args.command {
         Commands::Gcf { respository } => gcf::run(&sh, respository),
+        Commands::Playground => playground::run(&sh),
     }
 }
