@@ -1,0 +1,9 @@
+[package]
+name = "xtool"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4.5.19", features = ["derive"] }
+xshell = "0.2"
