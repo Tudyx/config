@@ -19,6 +19,7 @@ enum Commands {
         /// For instance rustls/pemfile
         respository: String,
     },
+    /// Create a cargo project in tmp dir
     Playground,
 }
 
