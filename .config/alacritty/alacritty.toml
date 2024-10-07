@@ -30,3 +30,6 @@ family = "JetBrains Mono"
 
 [shell]
 program = "/usr/bin/fish"
+
+[keyboard]
+bindings = [{ key = "F7", action = "ToggleFullscreen" }]
