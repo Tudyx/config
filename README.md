@@ -14,5 +14,13 @@ stow . --target=$HOME
 ```sh
 cd xtool
 cargo build --release
-ln -s ./target/release/xtool $HOME/.local/bin
+ln -s $PWD/target/release/xtool $HOME/.local/bin
+```
+
+# Install gg
+
+```sh
+cd gg
+cargo build --release
+ln -s $PWD/target/release/gg $HOME/.local/bin
 ```

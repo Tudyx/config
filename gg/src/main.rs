@@ -1,6 +1,9 @@
 use clap::{Parser, Subcommand};
 use xshell::{cmd, Shell};
 
+// Git helper, strongly inspired from
+// https://github.com/matklad/config/blob/0f690f89c80b0e246909b54a0e97c67d5ce6ab0c/gg/src/main.rs
+
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -11,6 +14,12 @@ struct Args {
 #[derive(Subcommand)]
 enum Commands {
     Log,
+    Prune,
+    Rebase,
+    Create {
+        /// The name of the branch to create
+        branch: String,
+    },
 }
 
 fn main() -> anyhow::Result<()> {
@@ -46,6 +55,9 @@ fn main() -> anyhow::Result<()> {
 
     match args.command {
         Commands::Log => context.log(),
+        Commands::Prune => context.prune(),
+        Commands::Rebase => context.rebase(),
+        Commands::Create { branch } => context.create(branch),
     }
 }
 
@@ -60,6 +72,41 @@ impl<'a> Context<'a> {
         let remote = self.remote;
         let main_branch = self.main_branch;
         cmd!(self.sh, "git log --oneline {remote}/{main_branch}^..").run()?;
+        Ok(())
+    }
+
+    fn prune(&self) -> anyhow::Result<()> {
+        let branches = cmd!(self.sh, "git branch --merged").read()?;
+        let branches: Vec<_> = branches
+            .lines()
+            .map(str::trim)
+            .filter(|&it| {
+                !(it == "master" || it == "main" || it.starts_with('*') || it.starts_with('+'))
+            })
+            .collect();
+        if branches.is_empty() {
+            println!("no merged branches");
+            return Ok(());
+        }
+
+        cmd!(self.sh, "git branch -D {branches...}").run()?;
+        Ok(())
+    }
+
+    fn rebase(&self) -> anyhow::Result<()> {
+        let remote = self.remote;
+        let main_branch = self.main_branch;
+        cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
+        cmd!(self.sh, "git rebase {remote}/{main_branch}").run()?;
+        Ok(())
+    }
+
+    fn create(&self, branch: String) -> anyhow::Result<()> {
+        let remote = self.remote;
+        let main_branch = self.main_branch;
+        cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
+        cmd!(self.sh, "git switch --create {branch}").run()?;
+        cmd!(self.sh, "git reset --hard {remote}/{main_branch}").run()?;
         Ok(())
     }
 }
