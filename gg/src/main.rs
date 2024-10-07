@@ -20,6 +20,7 @@ enum Commands {
         /// The name of the branch to create
         branch: String,
     },
+    Amend,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -58,6 +59,7 @@ fn main() -> anyhow::Result<()> {
         Commands::Prune => context.prune(),
         Commands::Rebase => context.rebase(),
         Commands::Create { branch } => context.create(branch),
+        Commands::Amend => context.ammend(),
     }
 }
 
@@ -107,6 +109,17 @@ impl<'a> Context<'a> {
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
         cmd!(self.sh, "git switch --create {branch}").run()?;
         cmd!(self.sh, "git reset --hard {remote}/{main_branch}").run()?;
+        Ok(())
+    }
+
+    fn ammend(&self) -> anyhow::Result<()> {
+        let current_user = cmd!(self.sh, "git config --get user.name").read()?;
+        let previous_commit_author = cmd!(self.sh, "git log --format=%aN -n 1 HEAD").read()?;
+        if current_user != previous_commit_author {
+            return Err(anyhow::anyhow!("The previous author '{previous_commit_author}' is different from the current user '{current_user}'"));
+        }
+
+        cmd!(self.sh, "git commit --amend --no-edit").run()?;
         Ok(())
     }
 }
