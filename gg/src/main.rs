@@ -1,3 +1,4 @@
+use anyhow::ensure;
 use clap::{Parser, Subcommand};
 use xshell::{cmd, Shell};
 
@@ -21,6 +22,7 @@ enum Commands {
         branch: String,
     },
     Amend,
+    Uncommit,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -60,6 +62,7 @@ fn main() -> anyhow::Result<()> {
         Commands::Rebase => context.rebase(),
         Commands::Create { branch } => context.create(branch),
         Commands::Amend => context.ammend(),
+        Commands::Uncommit => context.uncommit(),
     }
 }
 
@@ -73,6 +76,10 @@ impl<'a> Context<'a> {
     fn log(&self) -> anyhow::Result<()> {
         let remote = self.remote;
         let main_branch = self.main_branch;
+        cmd!(self.sh, "git fetch {remote} {main_branch}")
+            .quiet()
+            .ignore_stderr()
+            .run()?;
         cmd!(self.sh, "git log --oneline {remote}/{main_branch}^..").run()?;
         Ok(())
     }
@@ -99,7 +106,7 @@ impl<'a> Context<'a> {
         let remote = self.remote;
         let main_branch = self.main_branch;
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
-        cmd!(self.sh, "git rebase {remote}/{main_branch}").run()?;
+        cmd!(self.sh, "git rebase {remote}/{main_branch} --autosquash").run()?;
         Ok(())
     }
 
@@ -107,19 +114,26 @@ impl<'a> Context<'a> {
         let remote = self.remote;
         let main_branch = self.main_branch;
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
-        cmd!(self.sh, "git switch --create {branch}").run()?;
-        cmd!(self.sh, "git reset --hard {remote}/{main_branch}").run()?;
+        cmd!(
+            self.sh,
+            "git switch --create {branch} {remote}/{main_branch}"
+        )
+        .run()?;
         Ok(())
     }
 
     fn ammend(&self) -> anyhow::Result<()> {
         let current_user = cmd!(self.sh, "git config --get user.name").read()?;
         let previous_commit_author = cmd!(self.sh, "git log --format=%aN -n 1 HEAD").read()?;
-        if current_user != previous_commit_author {
-            return Err(anyhow::anyhow!("The previous author '{previous_commit_author}' is different from the current user '{current_user}'"));
-        }
-
+        ensure!(current_user == previous_commit_author, "The previous author '{previous_commit_author}' is different from the current user '{current_user}'");
         cmd!(self.sh, "git commit --amend --no-edit").run()?;
+        Ok(())
+    }
+
+    fn uncommit(&self) -> anyhow::Result<()> {
+        let message = cmd!(self.sh, "git log --format=%B -n 1 HEAD").read()?;
+        cmd!(self.sh, "git reset --mixed HEAD~").run()?;
+        cmd!(self.sh, "git commit --allow-empty -m {message}").run()?;
         Ok(())
     }
 }
