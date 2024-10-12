@@ -28,7 +28,7 @@ foreground = "#c5c8c6"
 [font.normal]
 family = "JetBrains Mono"
 
-[shell]
+[terminal.shell]
 program = "/usr/bin/fish"
 
 [keyboard]
