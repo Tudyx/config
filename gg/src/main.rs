@@ -1,3 +1,4 @@
+use anyhow::bail;
 use clap::{Parser, Subcommand};
 use xshell::{cmd, Shell};
 
@@ -116,7 +117,7 @@ impl<'a> Context<'a> {
         let current_user = cmd!(self.sh, "git config --get user.name").read()?;
         let previous_commit_author = cmd!(self.sh, "git log --format=%aN -n 1 HEAD").read()?;
         if current_user != previous_commit_author {
-            return Err(anyhow::anyhow!("The previous author '{previous_commit_author}' is different from the current user '{current_user}'"));
+            bail!("The previous author '{previous_commit_author}' is different from the current user '{current_user}'");
         }
 
         cmd!(self.sh, "git commit --amend --no-edit").run()?;
