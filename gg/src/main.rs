@@ -20,6 +20,10 @@ enum Commands {
     Create {
         /// The name of the branch to create
         branch: String,
+        /// The starting point for the new branch. Specifying a <start-point> allows
+        /// you to create a branch based on some other point in history than where HEAD currently points.
+        #[arg(long)]
+        start: Option<String>,
     },
     Amend,
     Uncommit,
@@ -60,7 +64,7 @@ fn main() -> anyhow::Result<()> {
         Commands::Log => context.log(),
         Commands::Prune => context.prune(),
         Commands::Rebase => context.rebase(),
-        Commands::Create { branch } => context.create(branch),
+        Commands::Create { branch, start } => context.create(branch, start),
         Commands::Amend => context.ammend(),
         Commands::Uncommit => context.uncommit(),
     }
@@ -110,15 +114,20 @@ impl<'a> Context<'a> {
         Ok(())
     }
 
-    fn create(&self, branch: String) -> anyhow::Result<()> {
+    fn create(&self, branch: String, start: Option<String>) -> anyhow::Result<()> {
         let remote = self.remote;
         let main_branch = self.main_branch;
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
-        cmd!(
-            self.sh,
-            "git switch --create {branch} {remote}/{main_branch}"
-        )
-        .run()?;
+
+        if let Some(start_point) = start {
+            cmd!(self.sh, "git switch --create {branch} {start_point}").run()?;
+        } else {
+            cmd!(
+                self.sh,
+                "git switch --create {branch} {remote}/{main_branch}"
+            )
+            .run()?;
+        }
         Ok(())
     }
 
