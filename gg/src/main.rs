@@ -120,11 +120,15 @@ impl<'a> Context<'a> {
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
 
         if let Some(start_point) = start {
-            cmd!(self.sh, "git switch --create {branch} {start_point}").run()?;
+            cmd!(
+                self.sh,
+                "git switch --create {branch} {start_point} --no-track"
+            )
+            .run()?;
         } else {
             cmd!(
                 self.sh,
-                "git switch --create {branch} {remote}/{main_branch}"
+                "git switch --create {branch} {remote}/{main_branch} --no-track"
             )
             .run()?;
         }
