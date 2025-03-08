@@ -76,7 +76,7 @@ struct Context<'a> {
     remote: &'static str,
 }
 
-impl<'a> Context<'a> {
+impl Context<'_> {
     fn log(&self) -> anyhow::Result<()> {
         let remote = self.remote;
         let main_branch = self.main_branch;
@@ -110,7 +110,7 @@ impl<'a> Context<'a> {
         let remote = self.remote;
         let main_branch = self.main_branch;
         cmd!(self.sh, "git fetch {remote} {main_branch}").run()?;
-        cmd!(self.sh, "git rebase {remote}/{main_branch} --autosquash").run()?;
+        cmd!(self.sh, "git rebase {remote}/{main_branch}").run()?;
         Ok(())
     }
 
