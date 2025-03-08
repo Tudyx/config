@@ -1,6 +1,10 @@
 abbr -a c cargo
 abbr -a g git
 abbr -a ga 'git add -p'
+abbr gga "gg amend"
+abbr gp "git push"
+abbr gpf "git push --force-with-lease"
+abbr gs "git status"
 abbr -a ip 'ip --color=auto'
 
 # Alias
@@ -15,6 +19,8 @@ else
     abbr -a ll 'ls -l'
     abbr -a lll 'ls -la'
 end
+
+set fish_greeting
 
 setenv EDITOR hx
 # hx is not in the path for the root user.
