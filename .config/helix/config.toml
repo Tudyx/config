@@ -13,6 +13,7 @@ idle-timeout = 800
 completion-timeout = 5
 
 end-of-line-diagnostics = "hint"
+rainbow-brackets = true
 
 [editor.statusline]
 right = ["workspace-diagnostics", "selections", "register", "position","position-percentage", "spacer", "file-encoding"]
@@ -45,9 +46,6 @@ hidden = false
 [editor.indent-guides]
 render = true
 character = "▏"
-
-[editor.inline-diagnostics]
-cursor-line = "warning"
 
 # Uncomment if you need to see whitespaces.
 # [editor.whitespace]
