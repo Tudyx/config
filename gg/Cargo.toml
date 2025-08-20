@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-xshell = "0.2.7"
+xshell = "0.3.0-pre.2"
