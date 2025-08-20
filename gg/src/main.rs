@@ -16,7 +16,14 @@ struct Args {
 enum Commands {
     Log,
     Prune,
+    Main,
     Rebase,
+    /// Fuzzy switch to a different branch.
+    Switch {
+        #[arg(short, long)]
+        remote: bool,
+        branch: Option<String>,
+    },
     Create {
         /// The name of the branch to create
         branch: String,
@@ -64,9 +71,11 @@ fn main() -> anyhow::Result<()> {
         Commands::Log => context.log(),
         Commands::Prune => context.prune(),
         Commands::Rebase => context.rebase(),
+        Commands::Switch { remote, branch } => context.switch(branch, remote),
         Commands::Create { branch, start } => context.create(branch, start),
         Commands::Amend => context.ammend(),
         Commands::Uncommit => context.uncommit(),
+        Commands::Main => context.main(),
     }
 }
 
@@ -77,6 +86,14 @@ struct Context<'a> {
 }
 
 impl Context<'_> {
+    fn main(&self) -> anyhow::Result<()> {
+        let remote = self.remote;
+        let main_branch = self.main_branch;
+        cmd!(self.sh, "git fetch {remote}").run_echo()?;
+        cmd!(self.sh, "git switch -d {remote}/{main_branch}").run_echo()?;
+        Ok(())
+    }
+
     fn log(&self) -> anyhow::Result<()> {
         let remote = self.remote;
         let main_branch = self.main_branch;
@@ -108,6 +125,31 @@ impl Context<'_> {
         let main_branch = self.main_branch;
         cmd!(self.sh, "git fetch {remote} {main_branch}").run_echo()?;
         cmd!(self.sh, "git rebase {remote}/{main_branch}").run_echo()?;
+        Ok(())
+    }
+
+    fn switch(&self, branch: Option<String>, remote: bool) -> anyhow::Result<()> {
+        if let Some(branch) = branch {
+            cmd!(self.sh, "git switch {branch}").run()?;
+            return Ok(());
+        }
+
+        let branches = if remote {
+            cmd!(self.sh, "git fetch").run_echo()?;
+            cmd!(self.sh, "git branch -r").read()?
+        } else {
+            cmd!(self.sh, "git branch").read()?
+        };
+        let branch_selected = cmd!(self.sh, "fzf --tmux center --reverse --info=inline")
+            .stdin(&branches)
+            .read()?
+            .trim()
+            .to_string();
+
+        let branch_selected = branch_selected
+            .strip_prefix(&format!("{}/", self.remote))
+            .unwrap_or(&branch_selected);
+        cmd!(self.sh, "git switch {branch_selected}").run()?;
         Ok(())
     }
 
