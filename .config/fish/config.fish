@@ -6,6 +6,7 @@ abbr gp "git push"
 abbr gpf "git push --force-with-lease"
 abbr gs "git status"
 abbr -a ip 'ip --color=auto'
+abbr -a copy 'xclip -selection clip'
 
 # Alias
 abbr -a cat bat
