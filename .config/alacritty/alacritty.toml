@@ -31,5 +31,11 @@ family = "JetBrains Mono"
 [terminal.shell]
 program = "/usr/bin/fish"
 
-[keyboard]
-bindings = [{ key = "F7", action = "ToggleFullscreen" }]
+[[keyboard.bindings]]
+key = "F7"
+action = "ToggleFullscreen"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
