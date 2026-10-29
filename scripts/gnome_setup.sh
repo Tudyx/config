@@ -26,6 +26,10 @@ gsettings set $WM switch-to-workspace-down "[]"
 # default, both in GNOME and in the Ubuntu Dock, so free it first.
 gsettings set org.gnome.shell.extensions.dash-to-dock hot-keys false
 for i in 1 2 3 4; do
+  # Clear them too: the Ubuntu 22.04 dock may keep them despite hot-keys false.
+  for key in app-hotkey app-shift-hotkey app-ctrl-hotkey; do
+    gsettings set org.gnome.shell.extensions.dash-to-dock $key-$i "[]"
+  done
   gsettings set $SHELL_KEYS switch-to-application-$i "[]"
   gsettings set $WM switch-to-workspace-$i "['<Super>$i']"
   gsettings set $WM move-to-workspace-$i "['<Super><Shift>$i']"
